@@ -72,7 +72,6 @@ function start() {
         console.log(table.toString())
         console.log(stars);
         if (err) throw err;
-
         promptId();
     });
 }
@@ -117,6 +116,8 @@ function validateQuantity(id, quantity) {
     }
 }
 
+// If store does have enough product, decrease quantity by correct amount and reflect remaining amount
+// Add user purchases and show total at checkout
 function updateProduct(id, newStock, quantity, price, name) {
     connection.query("UPDATE products SET ? WHERE ?", [{
         stock_quantity: newStock
@@ -157,9 +158,4 @@ function buyAgain() {
             }
         })
 }
-// If not enough, prompt "insufficient quantity", prevent  order from going through
-
-// If store does have enough product, decrease quantity by correct amount and reflect remaining amount
-
-// Add user purchases and show total at checkout
 

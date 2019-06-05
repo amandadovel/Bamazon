@@ -32,7 +32,7 @@ function beginningPrompt() {
 
         }
 
-// Answer function with switch case for response from user 
+        // Answer function with switch case for response from user 
     ]).then(function (answer) {
         switch (answer.select) {
             case "View Products for Sale":
@@ -42,7 +42,7 @@ function beginningPrompt() {
                 lowInventory();
                 break;
             case "Add to Inventory":
-                addInventory();
+                addPrompt();
                 break;
             case "Add New Product":
                 addProduct();
@@ -70,7 +70,7 @@ function start() {
             ])
 
         }
-       // console.log(res);
+        // console.log(res);
         console.log(table.toString())
         console.log(stars);
         if (err) throw err;
@@ -98,9 +98,8 @@ function lowInventory() {
                     colors.blue(res[i].stock_quantity)
                 ])
             }
-
         }
-       
+
         console.log(table.toString())
         console.log(stars);
         if (err) throw err;
@@ -109,4 +108,66 @@ function lowInventory() {
     });
 }
 
+function addPrompt() {
+    connection.query("SELECT * FROM products", function (err, res) {
+        products = res;
+        inquirer.prompt([
+            {
+                name: "product",
+                type: "list",
+                message: "Which product would you like to update?",
+                choices: function () {
+                    var choiceArr = [];
+                    for (var i = 0; i < res.length; i++) {
+                        choiceArr.push(res[i].product_name);
+                    }
+                    return choiceArr;
+                }
+            },
+            {
+                name: "quantity",
+                type: "input",
+                message: "How much of the product would you like to add to the inventory?"
+            }
 
+        ]).then(function (answer) {
+            //    console.log(answer.product);
+            //    console.log(answer.quantity); 
+            var chosenProduct = answer.product;
+            var chosenQuantity = parseInt(answer.quantity);
+            addInventory(chosenProduct, chosenQuantity)
+        })
+    });
+}
+
+function addInventory(product, quantity) {
+    
+    for (var i = 0; i < products.length; i ++) {
+        if(products[i].product_name === product) {
+            var newQuantity = products[i].stock_quantity + quantity
+        }
+    }
+
+    connection.query(
+        "UPDATE products SET ? WHERE ?",
+        [
+            {
+                stock_quantity: newQuantity
+            },
+            {
+                product_name: product
+            }
+        ],
+        function (err) {
+            if (err) throw err;
+            console.log(stars);
+            console.log("Product successfully updated!")
+            console.log(stars);
+            beginningPrompt();
+        }
+    )
+}
+
+function addProduct() {
+    
+}
