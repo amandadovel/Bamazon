@@ -27,8 +27,8 @@ function beginningPrompt() {
         {
             name: "select",
             type: "list",
-            message: "What would you like to do?",
-            choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product"]
+            message: emoji.get('crescent_moon') + colors.blue( " What would you like to do?"),
+            choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product", "Quit"]
 
         }
 
@@ -45,8 +45,10 @@ function beginningPrompt() {
                 addPrompt();
                 break;
             case "Add New Product":
-                addProduct();
+                productPrompt();
                 break;
+            case "Quit":
+                connection.end();
         }
     })
 }
@@ -115,7 +117,7 @@ function addPrompt() {
             {
                 name: "product",
                 type: "list",
-                message: "Which product would you like to update?",
+                message: colors.green("Which product would you like to update?"),
                 choices: function () {
                     var choiceArr = [];
                     for (var i = 0; i < res.length; i++) {
@@ -127,7 +129,7 @@ function addPrompt() {
             {
                 name: "quantity",
                 type: "input",
-                message: "How much of the product would you like to add to the inventory?"
+                message: colors.green("How much of the product would you like to add to the inventory?")
             }
 
         ]).then(function (answer) {
@@ -141,9 +143,9 @@ function addPrompt() {
 }
 
 function addInventory(product, quantity) {
-    
-    for (var i = 0; i < products.length; i ++) {
-        if(products[i].product_name === product) {
+
+    for (var i = 0; i < products.length; i++) {
+        if (products[i].product_name === product) {
             var newQuantity = products[i].stock_quantity + quantity
         }
     }
@@ -161,13 +163,55 @@ function addInventory(product, quantity) {
         function (err) {
             if (err) throw err;
             console.log(stars);
-            console.log("Product successfully updated!")
+            console.log(colors.magenta("Product successfully updated!", emoji.get('boom')));
             console.log(stars);
             beginningPrompt();
         }
     )
 }
-
-function addProduct() {
-    
+function productPrompt() {
+    inquirer.prompt([
+        {
+            name: "newProduct",
+            type: "input",
+            message: emoji.get('star') + colors.green(" What is the product you would like to add to the store?",),
+        },
+        {
+            name: "department",
+            type: "list",
+            message: emoji.get('star') + colors.green(" Which department does this product belong?"),
+            choices: ["Electronics", "Outdoors", "Sports", "Kitchen", "Womens Accessories", "Hair and Makeup"]
+        },
+        {
+            name: "price",
+            type: "input",
+            message: emoji.get('moneybag') + colors.green(" What is the price of the product?"),
+        },
+        {
+            name: "productQuantity",
+            type: "input",
+            message: emoji.get('star') + colors.green(" Enter the quantity of the product you would like to add: "),
+        }
+    ]).then(function (answer) {
+        var newProduct = answer.newProduct;
+        var newDept = answer.department;
+        var newPrice = answer.price;
+        var newQuantity = answer.productQuantity;
+        addProduct(newProduct, newDept, newPrice, newQuantity);
+    })
+}
+function addProduct(product, department, price, quantity) {
+    connection.query("INSERT INTO products SET ? ",{
+        product_name: product,
+        department_name: department,
+        price: price,
+        stock_quantity: quantity
+    }, function(err, res) {
+        if(err) throw err;
+        console.log(stars);
+        console.log(colors.magenta("Product successfully added to inventory!", emoji.get('boom')));
+        console.log(stars);
+        beginningPrompt();
+    }
+    )
 }
