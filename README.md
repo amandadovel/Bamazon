@@ -29,7 +29,7 @@ This is an Amazon-like storefront using MYSQL. The app takes in orders from cust
 
 <img src="table.png" alt="table data">
 
-2. What is the ID of the Product you would like to buy? 🎵
+2. What is the ID of the Product you would like to buy? 
 
     2.1. How much of the Product would you like to buy?
 ```
