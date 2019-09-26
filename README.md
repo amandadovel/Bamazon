@@ -261,8 +261,8 @@ These instructions will get you a copy of the project up and running on your loc
 ## Built With 🔧
 
 * [MYSQL](https://www.mysql.com/) - Database management system
-* [Node] (https://nodejs.org/en/download/) - As an asynchronous event driven JavaScript runtime, Node is designed to build scalable network applications. 
-* [Javascript] (https://www.javascript.com/) -JavaScript is the programming language of HTML and the Web
+* [Node](https://nodejs.org/en/download/) - As an asynchronous event driven JavaScript runtime, Node is designed to build scalable network applications. 
+* [Javascript](https://www.javascript.com/) -JavaScript is the programming language of HTML and the Web
 
 ## Author ⌨️
 *** Amanda Dovel *** - [amandadovel](https://github.com/amandadovel)
